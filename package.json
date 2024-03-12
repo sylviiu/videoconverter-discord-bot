@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0"
+  }
+}
