@@ -3,6 +3,7 @@ const config = require('./core/config');
 const bot = require(`./core/bot`);
 
 bot.once(Events.ClientReady, () => {
+    console.log(`Successfully logged in!`);
     console.log(`Logged in as "${bot.user.username}"`);
 });
 
