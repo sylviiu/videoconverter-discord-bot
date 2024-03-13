@@ -9,14 +9,14 @@ try {
     path.ffmpeg = require('ffmpeg-static')
 } catch(e) {
     console.log(`FFmpeg static not installed; finding system binary`)
-    path.ffmpeg = child_process.execSync(`which ffmpeg`)
+    path.ffmpeg = child_process.execSync(`which ffmpeg`)?.toString()
 }
 
 try {
     path.ffprobe = require('ffprobe-static').path
 } catch(e) {
     console.log(`FFprobe static not installed; finding system binary`)
-    path.ffprobe = child_process.execSync(`which ffprobe`)
+    path.ffprobe = child_process.execSync(`which ffprobe`)?.toString()
 }
 
 console.log(`paths`, path)
