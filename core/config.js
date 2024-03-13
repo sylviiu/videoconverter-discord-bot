@@ -4,7 +4,11 @@ const recursiveAssign = require(`../util/recursiveAssign`)
 const defaults = {
     threads: 3,
     discordToken: `token goes here!`,
-    targetFFmpegCodec: `h264`,
+    ffmpeg: {
+        targetCodec: `h264`,
+        additionalInputArgs: [],
+        additionalOutputArgs: []
+    },
     messages: [
         `nice video you got there`
     ],

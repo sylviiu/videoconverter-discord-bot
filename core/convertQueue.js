@@ -32,17 +32,20 @@ try {
 console.log(`paths`, path)
 
 class ConvertQueue {
-    constructor(threads, targetCodec) {
+    constructor(opt) {
         const codecs = child_process.execFileSync(path.ffmpeg, [`-codecs`, `-hide_banner`, `loglevel`, `error`]).toString().split(`-------`).slice(1).map(s => s.trim()).join(`-------`).trim();
 
         this.decodeCodecs = codecs.split(`\n`).filter(s => s[3] == `V` && s[1] == `D`).map(s => ({ [s.split(` `)[2]]: s.split(` `).slice(3).join(` `).trim() })).reduce((a,b) => ({ ...a, ...b }), {})
         this.encodeCodecs = codecs.split(`\n`).filter(s => s[3] == `V` && s[2] == `E`).map(s => ({ [s.split(` `)[2]]: s.split(` `).slice(3).join(` `).trim() })).reduce((a,b) => ({ ...a, ...b }), {})
 
-        this.threads = isNaN(threads) ? 1 : threads;
-        this.targetCodec = (this.encodeCodecs[targetCodec.split(`_`)[0]] && (targetCodec.includes(`_`) ? this.encodeCodecs[targetCodec.split(`_`)[0]].includes(targetCodec) : true)) ? targetCodec : `h264`;
+        this.threads = isNaN(opt.threads) ? 1 : opt.threads;
+        this.targetCodec = (this.encodeCodecs[opt.targetCodec.split(`_`)[0]] && (opt.targetCodec.includes(`_`) ? this.encodeCodecs[opt.targetCodec.split(`_`)[0]].includes(opt.targetCodec) : true)) ? opt.targetCodec : `h264`;
         this.baseTargetCodec = this.targetCodec.split(`_`)[0];
 
-        if(this.targetCodec != targetCodec) console.warn(`Codec "${targetCodec}" not selected for target; defaulted to ${this.targetCodec} (likely not an option)`, this.encodeCodecs);
+        this.additionalInputArgs = opt.additionalInputArgs;
+        this.additionalOutputArgs = opt.additionalOutputArgs;
+
+        if(this.targetCodec != opt.targetCodec) console.warn(`Codec "${opt.targetCodec}" not selected for target; defaulted to ${this.targetCodec} (likely not an option)`, this.encodeCodecs);
 
         return this;
     }
@@ -99,9 +102,17 @@ class ConvertQueue {
                         probeData = JSON.parse(probeData)
                     } catch(e) {}
 
-                    const args = [`-i`, `${url}`, `-f`, `mp4`, `-c:v`, `${this.targetCodec}`, `-movflags`, `frag_keyframe+empty_moov`, `-`];
+                    const args = [
+                        ...(this.additionalInputArgs?.length ? this.additionalInputArgs : []),
+                        `-i`, `${url}`, 
+                        `-f`, `mp4`, 
+                        `-c:v`, `${this.targetCodec}`,
+                        ...(this.additionalOutputArgs?.length ? this.additionalOutputArgs : []),
+                        `-movflags`, `frag_keyframe+empty_moov`, 
+                        `-`
+                    ];
 
-                    console.log(`args: "${args.join(`" "`)}"`)
+                    console.log(`args:\n- "${path.ffmpeg}"\n- ${args.join(`\n- `)}`)
 
                     const proc = child_process.spawn(path.ffmpeg, args);
         
