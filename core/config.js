@@ -29,4 +29,6 @@ try {
     config = require(`../config.json`);
 } catch(e) { config = {} }
 
+if(process.argv.includes(`debug`)) console.log(`config:`, config)
+
 module.exports = recursiveAssign(defaults, config);
