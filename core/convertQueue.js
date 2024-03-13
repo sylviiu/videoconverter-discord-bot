@@ -1,13 +1,25 @@
 const child_process = require('child_process');
 
 const path = {
-    ffmpeg: require('ffmpeg-static'),
-    ffprobe: require('ffprobe-static').path
+    ffmpeg: null,
+    ffprobe: null
 };
+
+try {
+    path.ffmpeg = require('ffmpeg-static')
+} catch(e) {
+    path.ffmpeg = child_process.execSync(`which ffmpeg`)
+}
+
+try {
+    path.ffprobe = require('ffprobe-static').path
+} catch(e) {
+    path.ffprobe = child_process.execSync(`which ffprobe`)
+}
 
 console.log(`paths`, path)
 
-module.exports = class ConvertQueue {
+export default class ConvertQueue {
     constructor(threads, targetCodec) {
         const codecs = child_process.execFileSync(path.ffmpeg, [`-codecs`, `-hide_banner`, `loglevel`, `error`]).toString().split(`-------`).slice(1).map(s => s.trim()).join(`-------`).trim();
 
@@ -156,3 +168,5 @@ module.exports = class ConvertQueue {
         return promise;
     }
 }
+
+export const paths = path;

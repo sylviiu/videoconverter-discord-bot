@@ -17,9 +17,11 @@ module.exports = async (bot, msg) => {
     
             bot.convertQueue.add({ url: attachment.url }).then(({ probeData, stream }) => {
                 const videoStream = probeData?.streams?.find(o => o.codec_type == `video`);
+
+                const randomMessage = config.messages[Math.floor(Math.random() * config.messages.length)]
     
                 msg.channel.send({
-                    content: `Attachment ${attachment.name} (${videoStream.codec_name} -> ${bot.convertQueue.baseTargetCodec})`,
+                    content: `${randomMessage} (${videoStream.codec_name} -> ${bot.convertQueue.baseTargetCodec})`,
                     files: [ new AttachmentBuilder(stream, { name: `${fileName}.mp4` }) ],
                     reply: {
                         failIfNotExists: false,

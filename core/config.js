@@ -5,6 +5,9 @@ const defaults = {
     threads: 3,
     discordToken: `token goes here!`,
     targetFFmpegCodec: `h264`,
+    messages: [
+        `nice video you got there`
+    ],
 };
 
 
