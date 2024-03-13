@@ -19,7 +19,7 @@ try {
 
 console.log(`paths`, path)
 
-export default class ConvertQueue {
+class ConvertQueue {
     constructor(threads, targetCodec) {
         const codecs = child_process.execFileSync(path.ffmpeg, [`-codecs`, `-hide_banner`, `loglevel`, `error`]).toString().split(`-------`).slice(1).map(s => s.trim()).join(`-------`).trim();
 
@@ -169,4 +169,4 @@ export default class ConvertQueue {
     }
 }
 
-export const paths = path;
+module.exports = { ConvertQueue, path }

@@ -1,6 +1,6 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const fs = require('fs');
-const convertQueue = require(`./convertQueue`);
+const { convertQueue } = require(`./convertQueue`);
 const requireDir = require(`../util/requireDir`);
 
 const config = require(`./config`);
