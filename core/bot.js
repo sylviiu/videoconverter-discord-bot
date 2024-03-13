@@ -19,6 +19,6 @@ for(const event of requireDir(`./events`)) {
     bot.on(event.name, (...data) => event.module(bot, ...data));
 };
 
-bot.convertQueue = new convertQueue(config.threads, config.targetFFmpegCodec);
+bot.convertQueue = new ConvertQueue(config.threads, config.targetFFmpegCodec);
 
 return module.exports = bot;
